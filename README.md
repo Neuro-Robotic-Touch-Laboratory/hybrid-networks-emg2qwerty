@@ -23,7 +23,7 @@ More information about the dataset structure and acquisition protocol can be fou
 Clone the repository:
 
 ```bash
-git clone https://github.com/andreorto98/private_hybridNet_emg2qwerty.git
+git clone https://github.com/Neuro-Robotic-Touch-Laboratory/hybrid-networks-emg2qwerty.git
 ```
 
 Download, extract, and symlink the **emg2qwerty** dataset:
