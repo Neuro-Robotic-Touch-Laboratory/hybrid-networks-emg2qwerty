@@ -1,0 +1,25 @@
+# @package _global_
+lr_scheduler:
+  scheduler:
+    _target_: emg2qwerty.utils.MyCosineAnnealingWarmRestarts
+    T_0:           450
+    warmup_epochs: 10
+    lr_decay:      [1,0.5]
+    eta_min:       1e-6
+  interval: epoch
+
+extra_callbacks:
+  - _target_:  emg2qwerty.utils.MyEarlyStopping
+    monitor:   val/CER
+    mode:      min
+    min_delta: 1   # absolute...
+    patience:  1
+    lr_scheduler_period: ${lr_scheduler.scheduler.T_0}
+    verbose:   true
+
+# extra_callbacks:
+#   - _target_: pytorch_lightning.callbacks.EarlyStopping
+#     monitor: val/CER
+#     mode: min
+#     min_delta: 1   # absolute...
+#     patience: ${lr_scheduler.scheduler.T_0}

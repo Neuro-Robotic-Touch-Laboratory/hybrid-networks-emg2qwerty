@@ -1,0 +1,38 @@
+# @package _global_
+model_HF:
+  _target_: emg2qwerty.modules.GRULayer
+  d_input:          -1   # overridden by mlp_features[-1]*bands in BaseRecurrentModule
+  d_hidden:         64
+
+  norm:             batchnorm   # batchnorm, layernorm, none
+  num_layers:       1
+  bidirectional:    false
+
+  prenorm:          false        # only false is supported
+  include_encoder:  false        # d_input to d_model
+  dropout:          0.
+  dropout_tie:      true
+  include_decoder:  false        # d_model to d_model
+  include_residual: false
+
+  HLfreq_ratio:             24
+  reduction_mode:           mean        # mean or last
+  detach_hidden_on_chunks:  false    
+  include_linear_layer:     150     # n output neurons of the linear layer or 0
+  non_linearity:            sparse_relu_10        
+
+  sparsity_after_non_linearity: 0.
+  sparsity_hidden_EGRU:         0.
+
+  gru_model:                    GRU  # GRU or EventBasedGRU
+
+  binary_output_EGRU:                   false   
+  dropout_EGRU:                         0.
+  zoneout_EGRU:                         0.1
+  dampening_factor_EGRU:                0.7     
+  pseudo_derivative_support_EGRU:       1.0     
+  thr_mean_EGRU:                        0.3
+  weight_initialization_gain_EGRU:      1.     
+  grad_clip_EGRU:                       none  
+
+  mean_pooling: 1

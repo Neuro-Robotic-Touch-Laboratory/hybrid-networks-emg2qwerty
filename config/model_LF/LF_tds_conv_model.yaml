@@ -1,0 +1,6 @@
+# @package _global_
+model_LF: 
+  _target_: emg2qwerty.modules.TDSConvEncoder
+  d_input:        -1  # overridden by HF_model.d_output
+  block_channels: [24, 24, 24, 24]
+  kernel_width:   32  # tried 32 (meta) and 16  # Total temporal receptive field of 125 samples given 4 layers [kernel_width*HLfreq_ratio*n_layers]

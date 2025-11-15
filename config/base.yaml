@@ -1,0 +1,98 @@
+defaults:
+  - user:         generic
+  - transforms:   raw_input # log_spectrogram 
+  - model_HF:     ??? 
+  - model_LF:     ???
+  - optimizer:    adam
+  - lr_scheduler: my_cosine_annealing_warm_restarts
+  - decoder:      ctc_greedy
+  - cluster:      local
+  - _self_
+
+autoTestOnly:   ''
+seed:           1501
+batch_size:     32
+num_workers:    4  # Number of workers for dataloading
+train:          true  # Whether to train or only run validation and test
+checkpoint:     null  # Optional path to checkpoint file
+
+monitor_metric: val/CER   # useful for callbacks ModelCheckpoint
+monitor_mode:   min
+
+monitor_metric2: val_continuous/CER   # useful for callbacks ModelCheckpoint
+monitor_mode2:   min
+
+train_on_longer_every:     10
+train_on_longer_factor:    8
+
+loss: ctc_loss  # or cross_entropy_loss
+
+model:
+  _target_: emg2qwerty.lightning.BaseRecurrentModule
+  in_features:  16
+  mlp_features: [24]             # MultiBandRotationInvariantMLP  # if empty, non_linearity must be none
+  non_linearity: sparse_relu_10  # MultiBandRotationInvariantMLP non linearity: relu, gelu, binary_X or none (if mlp_features is empty)
+  pooling: mean                  # MultiBandRotationInvariantMLP pooling: mean, max
+  offsets: [0]                   # MultiBandRotationInvariantMLP offsets
+  sparsity_RotInvMLP_after_non_linearity: 0.
+  norm:   batchnorm   # none or batchnorm or layernorm
+  
+  input_mean_pooling:    1
+
+datamodule:
+  _target_: emg2qwerty.lightning.WindowedEMGDataModule
+  window_length: 8000   # 4 sec windows for 2kHz EMG
+  padding: [1800, 200]  # 900ms past context, 100ms future context
+
+trainer:
+  accelerator:  auto
+  devices:      1
+  num_nodes:    1
+  max_epochs:   450
+  default_root_dir: ${hydra:runtime.output_dir}
+
+
+callbacks:
+  - _target_: pytorch_lightning.callbacks.ModelSummary
+    max_depth: 4
+  - _target_: pytorch_lightning.callbacks.LearningRateMonitor
+  - _target_: pytorch_lightning.callbacks.ModelCheckpoint
+    dirpath: ${hydra:runtime.output_dir}/checkpoints
+    monitor: ${monitor_metric}
+    mode: ${monitor_mode}
+    save_last: True
+    filename: val_{epoch}
+    verbose: True
+  - _target_: pytorch_lightning.callbacks.ModelCheckpoint
+    dirpath: ${hydra:runtime.output_dir}/checkpoints
+    monitor: ${monitor_metric2}
+    mode: ${monitor_mode2}
+    save_last: False
+    filename: valcont_{epoch}
+    verbose: True
+
+dataset:
+  root: ${hydra:runtime.cwd}/data
+
+wandb:
+  project: "pgi_hybrid_network"  # WandB project name
+  name: "def_name"         # Run name (optional)
+  group: "def_group_B"          # Group runs (optional)
+  tags: []                     # Tags (optional)
+  mode: "online"               # or "offline" for local testing
+
+hydra:
+  run:
+    dir: logs/${now:%Y-%m-%d}/${now:%H-%M-%S-%f}
+  sweep:
+    dir: ${hydra.run.dir}
+    subdir: job${hydra.job.num}_${hydra.job.override_dirname}
+  output_subdir: hydra_configs
+  job:
+    name: emg2qwerty
+    config:
+      override_dirname:
+        exclude_keys:
+          - checkpoint
+          - cluster
+          - trainer.accelerator

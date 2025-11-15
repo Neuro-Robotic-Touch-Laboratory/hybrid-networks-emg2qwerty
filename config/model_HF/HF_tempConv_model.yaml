@@ -1,0 +1,12 @@
+# @package _global_
+model_HF: 
+  _target_:               emg2qwerty.modules.TemporalConvolution
+
+  d_input:                -1          # overridden by mlp_features[-1]*bands in BaseRecurrentModule
+  activation:             gelu        # gelu, relu, or also binary (but in the last layer is gelu)
+  norm:                   batchnorm    # none or batchnorm  
+  out_channels:           [ 64, 128, 150 ]
+  strides:                [ 4,  3,  2  ]
+  kernel_sizes:           [ 4,  3,  2  ]
+  padding:                0
+  

@@ -1,0 +1,42 @@
+# @package _global_
+model_LF:                 # d_output fixed to 150, -1 if you want to overwrite it with model_HF.d_output
+  _target_:               emg2qwerty.modules.S4Model
+  S4_model:               S4D
+  d_input:                -1            # overridden by mlp_features[-1] in BaseRecurrentModule or model_HF.d_output [if model_HF is not identity]
+  d_model:                128
+  d_latent_space:         32            # latent space dimension (for each dimension in d_model)
+  d_output:               150           # overridden by mlp_features[-1] in BaseRecurrentModule or model_HF.d_output [if model_HF is not identity]
+  n_layers:               8
+  lr:                     0.0005        # lr for the parameteres of the S4D model: min(0.001, lr) is used
+  dt_min:                 0.04
+  dt_max:                 4.
+  dropout_inner:          0.1           # emplys ssm_models.DropoutNd (default tie=True)
+  dropout_outer:          0.1           # emplys ssm_models.DropoutNd (default tie=True)
+  dropout_tie:            true          # if true, the same mask is kept for all time steps
+  prenorm:                false
+  decoder_non_linearity:  gelu    # relu, gelu, none
+  reduce_time_dimension:  false
+  permuteLBHtoBLH:        true
+  activation:             gelu    # relu, gelu
+
+  reg_timescale:          0.0
+  reg_timescale_mode:     real
+
+  end_layer_pools:        [2,2, 2,2, 1,1, 1,1]         
+  end_layer_pool_mode:    mean         # 'mean' 'last' 'max' or 'none'
+  
+
+  mid_layer_pools:        [0]
+  mid_layer_pool_mode:   'none'        # 'mean' 'last' 'max' or 'none
+
+  sparsity_post_actv_S4D: 0. 
+
+  delta_pre_activation:   false
+  delta_post_activation:  false
+
+  des:  ''    # useful for the sparsity dict
+
+
+  upscale_last_layer:     1
+
+# NOTE: lightning.BaseRecurrentModule calls the S4Model [S4D] defined in modules.py which calls the S4D model defined in ssm_models.py

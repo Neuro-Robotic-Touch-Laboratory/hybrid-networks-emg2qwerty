@@ -1,0 +1,9 @@
+user0 	 14.47
+user1 	 9.06
+user2 	 6.85
+user3 	 7.42
+user4 	 6.69
+user5 	 8.23
+user6 	 15.32
+user7 	 13.07
+Average 	 10.14

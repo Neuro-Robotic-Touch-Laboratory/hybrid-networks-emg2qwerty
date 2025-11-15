@@ -1,0 +1,2 @@
+generic 	 42.42
+Average 	 42.42

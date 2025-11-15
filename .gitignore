@@ -1,0 +1,5 @@
+logs/
+.DS_Store
+config/user/user0MAC.yaml
+run_logs/
+emg2qwerty/__pycache__*
