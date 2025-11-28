@@ -1,8 +1,4 @@
-# private_hybridNet_emg2qwerty
-
-
-This repository accompanies the experiments and models presented in our paper, which investigates how computationally efficient neural architectures can enable real-time decoding of surface electromyography (sEMG) signals for naturalistic text entry. We introduce two state-space–model–based approaches—a homogeneous SSM and a hybrid high-/low-frequency two-stage architecture—and evaluate them across multiple computational budgets on the challenging emg2qwerty dataset. Our models achieve state-of-the-art performance while requiring up to four orders of magnitude fewer operations than prior work, and we validate their real-time feasibility through deployment on low-power STM32 microcontrollers.
-
+# hybrid-networks-emg2qwerty
 
 This repository accompanies the experiments and models presented in our paper: **“Hybrid, two-stage neural networks optimize the accuracy vs. computational cost trade-off in sEMG decoding.”**.
 This work investigates how computationally efficient neural architectures can enable real-time decoding of surface electromyography (sEMG) signals for naturalistic text entry. We introduce two state-space–model–based approaches—a homogeneous SSM and a hybrid high-/low-frequency two-stage architecture—and evaluate them across multiple computational budgets on the challenging emg2qwerty dataset. Our models achieve state-of-the-art performance while requiring up to four orders of magnitude fewer operations than prior work, and we validate their real-time feasibility through deployment on low-power STM32 microcontrollers.
